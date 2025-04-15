@@ -1,12 +1,14 @@
+
 import MessageAvatar from './MessageAvatar';
 import MessageActions from './MessageActions';
 
 type MessageProps = {
-  role: 'user' | 'assistant';
+  role: 'user' | 'assistant' | 'system';
   content: string;
+  isStreaming?: boolean;
 };
 
-const Message = ({ role, content }: MessageProps) => {
+const Message = ({ role, content, isStreaming = false }: MessageProps) => {
   return (
     <div className="py-6">
       <div className={`flex gap-4 ${role === 'user' ? 'flex-row-reverse' : ''}`}>
@@ -14,8 +16,11 @@ const Message = ({ role, content }: MessageProps) => {
         <div className={`flex-1 space-y-2 ${role === 'user' ? 'flex justify-end' : ''}`}>
           <div className={`${role === 'user' ? 'bg-gray-700/50 rounded-[20px] px-4 py-2 inline-block' : ''}`}>
             {content}
+            {isStreaming && (
+              <span className="inline-block w-1.5 h-4 ml-1 bg-gray-300 animate-pulse"></span>
+            )}
           </div>
-          {role === 'assistant' && <MessageActions />}
+          {role === 'assistant' && !isStreaming && <MessageActions />}
         </div>
       </div>
     </div>
