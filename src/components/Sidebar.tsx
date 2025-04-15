@@ -1,5 +1,5 @@
 
-import { Menu, Plus } from "lucide-react";
+import { Menu, PenSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SidebarProps {
@@ -21,15 +21,16 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
           </button>
         </div>
 
-        <div className="flex-col flex-1 transition-opacity duration-500">
-          <button 
-            className="flex w-full items-center gap-2 rounded-lg border border-white/20 p-4 hover:bg-gray-500/10 transition-colors"
-            onClick={() => window.location.reload()}
-          >
-            <Plus className="h-4 w-4" />
-            <span>New Chat</span>
-          </button>
-        </div>
+        {isOpen && (
+          <div className="flex-col flex-1 transition-opacity duration-500">
+            <button 
+              className="flex items-center justify-center rounded-lg border border-white/20 p-3 hover:bg-gray-500/10 transition-colors"
+              onClick={() => window.location.reload()}
+            >
+              <PenSquare className="h-5 w-5" />
+            </button>
+          </div>
+        )}
       </nav>
     </div>
   );
