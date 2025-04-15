@@ -36,4 +36,3 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
 };
 
 export default Sidebar;
-
