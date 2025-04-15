@@ -16,7 +16,6 @@ const Index = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-
   const handleSendMessage = async (content: string) => {
     if (!content.trim()) {
       toast({
@@ -72,10 +71,10 @@ const Index = () => {
           {messages.length === 0 ? (
             <div className="w-full max-w-3xl px-4 space-y-4">
               <div>
-                <h1 className="mb-8 text-4xl font-semibold text-center">What can I help with?</h1>
+                <h1 className="mb-8 text-4xl font-semibold text-center">Hello! I'm Mental Health AI</h1>
                 <ChatInput onSend={handleSendMessage} isLoading={isLoading} />
               </div>
-              <ActionButtons />
+              {/* <ActionButtons /> */}
             </div>
           ) : (
             <>
