@@ -1,30 +1,10 @@
 
 import OpenAI from 'openai';
 
-// We'll initialize OpenAI with the API key (which will be provided later)
-let openaiInstance: OpenAI | null = null;
-
-export const initializeOpenAI = (apiKey: string) => {
-  openaiInstance = new OpenAI({
-    apiKey,
-    dangerouslyAllowBrowser: true // Note: This should be replaced with a backend solution in production
-  });
-  
-  // Store API key in localStorage for persistence
-  localStorage.setItem('openai-api-key', apiKey);
-  return openaiInstance;
-};
-
-export const getOpenAIInstance = (): OpenAI => {
-  if (!openaiInstance) {
-    const storedApiKey = localStorage.getItem('openai-api-key');
-    if (storedApiKey) {
-      return initializeOpenAI(storedApiKey);
-    }
-    throw new Error('OpenAI API not initialized. Please provide an API key.');
-  }
-  return openaiInstance;
-};
+const openaiInstance = new OpenAI({
+  apiKey: 'your-api-key-here', // Replace with your actual API key
+  dangerouslyAllowBrowser: true // Note: This should be replaced with a backend solution in production
+});
 
 export type ChatMessage = {
   role: 'user' | 'assistant' | 'system';
@@ -38,10 +18,8 @@ export const streamChatCompletion = async (
   onError: (error: Error) => void
 ) => {
   try {
-    const openai = getOpenAIInstance();
-    
-    const stream = await openai.chat.completions.create({
-      model: 'gpt-4o-mini', // Using one of the latest models
+    const stream = await openaiInstance.chat.completions.create({
+      model: 'gpt-4o-mini',
       messages,
       stream: true,
     });
