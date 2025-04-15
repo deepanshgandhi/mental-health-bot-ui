@@ -1,14 +1,20 @@
-
-import OpenAI from 'openai';
+import { OpenAI } from 'openai';
 
 const openaiInstance = new OpenAI({
-  apiKey: 'your-api-key-here', // Replace with your actual API key
-  dangerouslyAllowBrowser: true // Note: This should be replaced with a backend solution in production
+  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+  baseURL: import.meta.env.VITE_OPENAI_BASE_URL,
+  dangerouslyAllowBrowser: true,
 });
 
 export type ChatMessage = {
   role: 'user' | 'assistant' | 'system';
   content: string;
+};
+
+const SYSTEM_PROMPT: ChatMessage = {
+  role: 'system',
+  content:
+    'You are a helpful mental health counselling assistant. Please answer the mental health questions based on the patient\'s description. The assistant gives helpful, comprehensive, and appropriate answers to the user\'s questions.',
 };
 
 export const streamChatCompletion = async (
@@ -18,14 +24,16 @@ export const streamChatCompletion = async (
   onError: (error: Error) => void
 ) => {
   try {
+    const fullMessages: ChatMessage[] = [SYSTEM_PROMPT, ...messages];
+
     const stream = await openaiInstance.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages,
+      model: 'lora-gpt',
+      messages: fullMessages,
       stream: true,
     });
 
     let fullResponse = '';
-    
+
     for await (const chunk of stream) {
       const content = chunk.choices[0]?.delta?.content || '';
       if (content) {
@@ -33,7 +41,7 @@ export const streamChatCompletion = async (
         onChunkReceived(content);
       }
     }
-    
+
     onComplete();
     return fullResponse;
   } catch (error) {
