@@ -35,18 +35,23 @@ const Index = () => {
       // Reset the partial response
       setPartialResponse("");
       
+      // Track the full response as it accumulates
+      let fullResponseText = "";
+      
       // Start streaming the response
       await streamChatCompletion(
         newMessages,
         (chunk) => {
+          // Update the running full response
+          fullResponseText += chunk;
           // Update the partial response as chunks arrive
-          setPartialResponse(prev => prev + chunk);
+          setPartialResponse(fullResponseText);
         },
         () => {
           // When streaming is complete, add the full assistant message
           setMessages(prev => [
             ...prev, 
-            { role: 'assistant', content: partialResponse }
+            { role: 'assistant', content: fullResponseText }
           ]);
           setPartialResponse("");
           setIsLoading(false);
